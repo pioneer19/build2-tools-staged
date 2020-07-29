@@ -1,0 +1,4 @@
+version=4
+# uscan --no-download --verbose
+# https://stage.build2.org/0/0.13.0-a.0/
+https://stage.build2.org/0/(\d\S+)/ build2-toolchain-(\d\S+)\.tar\.xz

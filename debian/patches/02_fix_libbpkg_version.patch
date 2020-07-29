@@ -1,0 +1,21 @@
+From: Alex Syrnikov <pioneer19@mailo.com>
+Subject: Fixed libbpkg version
+diff --git a/libbpkg/libbpkg/buildfile b/libbpkg/libbpkg/buildfile
+--- a/libbpkg/libbpkg/buildfile
++++ b/libbpkg/libbpkg/buildfile
+@@ -34,14 +34,7 @@ lib{bpkg}:
+ liba{bpkg}: cxx.export.poptions += -DLIBBPKG_STATIC
+ libs{bpkg}: cxx.export.poptions += -DLIBBPKG_SHARED
+ 
+-# For pre-releases use the complete version to make sure they cannot be used
+-# in place of another pre-release or the final version. See the version module
+-# for details on the version.* variable values.
+-#
+-if $version.pre_release
+-  lib{bpkg}: bin.lib.version = @"-$version.project_id"
+-else
+-  lib{bpkg}: bin.lib.version = @"-$version.major.$version.minor"
++lib{bpkg}: bin.lib.version = @"-$version.major.$version.minor"
+ 
+ # Install into the libbpkg/ subdirectory of, say, /usr/include/
+ # recreating subdirectories.

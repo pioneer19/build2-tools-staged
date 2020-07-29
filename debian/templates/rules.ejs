@@ -1,0 +1,54 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE = 1
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+BUILD2_ABI_VER = <%- major_minor_version %>
+
+%:
+	dh $@ --with pkgkde_symbolshelper --buildsystem=makefile
+
+override_dh_clean:
+	dh_clean
+
+override_dh_auto_build:
+	b-staged configure -v          \
+		config.cxx=$(CXX)         \
+		config.c.coptions="$(CFLAGS)"     \
+		config.cxx.coptions="$(CXXFLAGS)" \
+		config.cc.poptions="$(CPPFLAGS)"  \
+		config.cc.loptions="$(LDFLAGS)"   \
+		config.bin.lib=shared	  \
+		config.install.root=/usr  \
+		config.install.lib="/usr/lib/$(DEB_HOST_MULTIARCH)" \
+		config.install.chroot=./debian/tmp
+	b-staged -v configure: libodb/ libodb-sqlite/ \
+		config.cxx=$(CXX)         \
+		config.c.coptions="$(CFLAGS)"     \
+		config.cxx.coptions="$(CXXFLAGS)" \
+		config.cc.poptions="$(CPPFLAGS)"  \
+		config.cc.loptions="$(LDFLAGS)"   \
+		config.bin.lib=shared	  \
+		config.install.root=/usr  \
+		config.install.lib=/usr/lib/build2-tools-$(BUILD2_ABI_VER) \
+		config.install.chroot=./debian/tmp
+	b-staged -v update-for-install --no-progress libodb/ libodb-sqlite/ libbpkg/ bpkg/ bdep/
+
+override_dh_auto_install:
+	install -d ./debian/tmp
+	b-staged -v --no-progress install: libodb-sqlite/ bpkg/ bdep/ config.bin.rpath=/usr/lib/build2-tools-$(BUILD2_ABI_VER)
+	b-staged -v --no-progress install: libodb/ libbpkg/
+	rm -r ./debian/tmp/usr/include/odb \
+		./debian/tmp/usr/share/doc/libodb \
+		./debian/tmp/usr/share/doc/libodb-sqlite \
+		./debian/tmp/usr/lib/build2-tools-$(BUILD2_ABI_VER)/pkgconfig \
+		./debian/tmp/usr/lib/build2-tools-$(BUILD2_ABI_VER)/libodb.so \
+		./debian/tmp/usr/lib/build2-tools-$(BUILD2_ABI_VER)/libodb-sqlite.so \
+		./debian/tmp/usr/include/libbpkg \
+		./debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/libbpkg.so \
+		./debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/pkgconfig \
+		./debian/tmp/usr/share/doc/bdep/LICENSE \
+		./debian/tmp/usr/share/doc/bpkg/LICENSE \
+		./debian/tmp/usr/share/doc/libbpkg/LICENSE

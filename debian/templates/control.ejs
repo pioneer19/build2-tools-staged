@@ -1,0 +1,35 @@
+Source: build2-tools-staged
+Section: devel
+Priority: optional
+Maintainer: Alex Syrnikov <pioneer19@mailo.com>
+Build-Depends: debhelper-compat (=12),
+ dh-exec,
+ pkg-kde-tools,
+ build2-staged-dev (=<%- version %>-a.0.<%- version_date %>-20.04ppa1),
+ libsqlite3-dev (>=3.6.18)
+Standards-Version: 4.5.0
+Homepage: https://build2.org/
+
+Package: build2-tools-staged
+Architecture: any
+Multi-Arch: foreign
+Depends: build2-staged(=<%- version %>-a.0.<%- version_date %>-20.04ppa1),
+ ${misc:Depends},
+ ${shlibs:Depends}
+Description: bdep-staged and bpkg-staged tools for build2
+ bdep is dependency manager
+ bpkg is package manager
+
+Package: libbpkg-staged-<%- major_minor_version %>
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Conflicts: libbpkg-<%- major_minor_version %>
+Description: shared library for build2-tools-staged (bdep, bpkg)
+ This package provides runtime library for bdep-staged and bpkg-staged.
+ .
+ bdep is dependency manager
+ bpkg is package manager
