@@ -23,7 +23,8 @@ override_dh_auto_build:
 		config.bin.lib=shared	  \
 		config.install.root=/usr  \
 		config.install.lib="/usr/lib/$(DEB_HOST_MULTIARCH)" \
-		config.install.chroot=./debian/tmp
+		config.install.chroot=./debian/tmp \
+		config.bin.exe.suffix=-staged
 	b-staged -v configure: libodb/ libodb-sqlite/ \
 		config.cxx=$(CXX)         \
 		config.c.coptions="$(CFLAGS)"     \
@@ -34,7 +35,7 @@ override_dh_auto_build:
 		config.install.root=/usr  \
 		config.install.lib=/usr/lib/build2-tools-$(BUILD2_ABI_VER) \
 		config.install.chroot=./debian/tmp
-	b-staged -v update-for-install --no-progress libodb/ libodb-sqlite/ libbpkg/ bpkg/ bdep/
+	b-staged -v update-for-install: --no-progress libodb/ libodb-sqlite/ libbpkg/ bpkg/ bdep/
 
 override_dh_auto_install:
 	install -d ./debian/tmp

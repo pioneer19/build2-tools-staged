@@ -1,28 +1,28 @@
 From: Alex Syrnikov <pioneer19@mailo.com>
 Subject: Fix buildfile to build only required targets
-diff --git a/build/bootstrap.build b/build/bootstrap.build
---- a/build/bootstrap.build
-+++ b/build/bootstrap.build
+diff -ru build2-toolchain-0.14.0-a.0.20201106063545.a68b9bf6f066.orig/build/bootstrap.build build2-toolchain-0.14.0-a.0.20201106063545.a68b9bf6f066/build/bootstrap.build
+--- build2-toolchain-0.14.0-a.0.20201106063545.a68b9bf6f066.orig/build/bootstrap.build  2020-11-04 12:26:41.000000000 +0300
++++ build2-toolchain-0.14.0-a.0.20201106063545.a68b9bf6f066/build/bootstrap.build       2020-11-07 01:09:14.108623707 +0300
 @@ -3,8 +3,7 @@
  
  project = build2-toolchain
  amalgamation = # Disable amalgamation.
--subprojects = libpkgconf libbutl build2 \
--libsqlite3 libodb libodb-sqlite libbpkg bpkg bdep
+-subprojects  = {*/ -build/ -doc/ -tests/ -submodules/}
+-subprojects += tests/*/
 +subprojects = libodb libodb-sqlite libbpkg bpkg bdep
  
  using version
  using config
-diff --git a/buildfile b/buildfile
---- a/buildfile
-+++ b/buildfile
-@@ -4,8 +4,7 @@
- # Note that the project directories order is important (prerequisites go
- # first).
+diff -ru build2-toolchain-0.14.0-a.0.20201106063545.a68b9bf6f066.orig/buildfile build2-toolchain-0.14.0-a.0.20201106063545.a68b9bf6f066/buildfile
+--- build2-toolchain-0.14.0-a.0.20201106063545.a68b9bf6f066.orig/buildfile      2020-11-04 18:31:10.000000000 +0300
++++ build2-toolchain-0.14.0-a.0.20201106063545.a68b9bf6f066/buildfile   2020-11-07 01:09:50.740381460 +0300
+@@ -16,8 +16,7 @@
  #
--d = libpkgconf/ libbutl/ build2/ \
--libsqlite3/ libodb/ libodb-sqlite/ libbpkg/ bpkg/ bdep/ doc/
+ # See also subprojects in bootstrap.build.
+ #
+-d = libpkgconf/ libbutl/ build2/ libsqlite3/ libodb/ libodb-sqlite/ \
+-libbpkg/ bpkg/ bdep/ doc/ libbuild2-*/
 +d = libodb/ libodb-sqlite/ libbpkg/ bpkg/ bdep/
  
- i =                     \
- INSTALL                 \
+ if ($build.meta_operation == 'dist')
+   d += tests/*/
