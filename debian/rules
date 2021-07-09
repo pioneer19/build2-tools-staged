@@ -5,7 +5,7 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
 export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
-BUILD2_ABI_VER = <%- major_minor_version %>
+BUILD2_ABI_VER = 0.14
 
 %:
 	dh $@ --with pkgkde_symbolshelper --buildsystem=makefile
